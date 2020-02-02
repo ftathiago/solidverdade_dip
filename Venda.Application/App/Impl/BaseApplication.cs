@@ -4,7 +4,7 @@ using Venda.Crosscutting.Interfaces;
 
 namespace Venda.Application.App.Impl
 {
-    public class BaseApplication
+    public abstract class BaseApplication : IBaseApplication
     {
         private readonly List<MensagemErro> _mensagensErro;
 

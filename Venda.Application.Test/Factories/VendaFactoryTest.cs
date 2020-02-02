@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using AutoMapper;
 using Xunit;
+using System;
 
 namespace Venda.Application.Test
 {
@@ -49,10 +50,10 @@ namespace Venda.Application.Test
             vendaModel.Cliente = new ClienteModel(string.Empty);
             vendaModel.FormaDePagamento = 20;
 
-            VendaEntity venda = vendaEntityFactory.Criar(vendaModel);
-
-            Assert.Equal(FormaDePagamento.None, venda.FormaDePagamento);
+            Assert.Throws<AutoMapperMappingException>(() =>
+                vendaEntityFactory.Criar(vendaModel));
         }
+
         [Fact]
         public void TestCriarVendaComItem()
         {

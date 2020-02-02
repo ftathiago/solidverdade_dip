@@ -1,6 +1,7 @@
 using AutoMapper;
 using Venda.Application.Models;
 using Venda.Dominio.DTO;
+using System;
 
 namespace Venda.Application.Modules
 {
@@ -13,7 +14,14 @@ namespace Venda.Application.Modules
                 cfg.CreateMap<VendaModel, VendaDTO>()
                     .ForMember(destination => destination.FormaDePagamento,
                         opt =>
-                            opt.MapFrom(source => FormaDePagamento.GetName(typeof(FormaDePagamento), source.FormaDePagamento))
+                            opt.MapFrom<FormaDePagamento>((source, destination) =>
+                            {
+                                var enumValido = Enum.IsDefined(typeof(FormaDePagamento), source.FormaDePagamento);
+                                if (!enumValido)
+                                    throw new ArgumentOutOfRangeException($"O valor {source.FormaDePagamento} é inválido para forma de pagamento!");
+                                string formaDePagamento = FormaDePagamento.GetName(typeof(FormaDePagamento), source.FormaDePagamento);
+                                return (FormaDePagamento)Enum.Parse(typeof(FormaDePagamento), formaDePagamento);
+                            })
                         );
                 cfg.CreateMap<VendaItemModel, VendaItemDTO>();
                 cfg.CreateMap<ClienteModel, ClienteDTO>();
